@@ -1,0 +1,3 @@
+C:\Users\zack.mitchell\source\repos\Maui.PlayGround\EmptyOne\src\MauiAppEmpty\bin\release\net6.0-android\publish\com.companyname.mauiappempty-Signed.aab
+C:\Users\zack.mitchell\source\repos\Maui.PlayGround\EmptyOne\src\MauiAppEmpty\bin\release\net6.0-android\publish\com.companyname.mauiappempty.aab
+C:\Users\zack.mitchell\source\repos\Maui.PlayGround\EmptyOne\src\MauiAppEmpty\bin\release\net6.0-android\publish\com.companyname.mauiappempty-Signed.apk

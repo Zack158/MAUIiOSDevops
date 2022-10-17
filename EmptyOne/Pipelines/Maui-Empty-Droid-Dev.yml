@@ -1,0 +1,70 @@
+trigger:
+- none
+
+variables:
+    BuildConfiguration: Release
+    DotNetVersion: 6.0.300
+    
+
+stages:
+- stage: BuildAndroid
+  jobs:
+  - job: BuildMAUIEmptyApp
+    displayName: Build Maui Empty App
+    pool:
+      vmImage: 'windows-2022'
+      demands:
+      - MSBuild
+      
+    steps:
+    
+    - task: UseDotNet@2
+      displayName: .NET Version
+      inputs:
+        packageType: 'sdk'
+        version: '$(DotNetVersion)'
+    
+    - task: Bash@3
+      displayName: Install MAUI
+      inputs:
+        targetType: 'inline'
+        script: |
+          dotnet nuget locals all --clear 
+          dotnet workload install maui 
+          dotnet workload install android 
+    
+    - task: Bash@3
+      displayName: Restore nuget
+      inputs:
+        targetType: 'inline'
+        script: |
+          cd EmptyOne/
+          dotnet restore MauiAppEmpty.sln
+
+    - task: Bash@3
+      displayName: Build Android App
+      inputs:
+        targetType: 'inline'
+        script: |
+          cd EmptyOne
+          dotnet build src/MauiAppEmpty/MauiAppEmpty.csproj  -f net6.0-android -c Release
+
+    # Copy files to artifact directory  
+    - task: CopyFiles@2
+      displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
+      inputs:
+        SourceFolder: '$(system.defaultworkingdirectory)'
+        Contents: '**\bin\$(BuildConfiguration)\**'
+        TargetFolder: '$(build.ArtifactStagingDirectory)'
+        CleanTargetFolder: true
+
+     # Publish artifacts
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish to Mobile release'
+      inputs:
+       PathtoPublish: '$(build.ArtifactStagingDirectory)'
+       ArtifactName: 'drop'
+       publishLocation: 'Container'  
+
+
+# Release build down here todo#
